@@ -29,25 +29,25 @@ def monitor_router(user_id, ip_address):
         current_status = check_router(ip_address)
         if current_status != last_status:
             if current_status:
-                bot.send_message(user_id, "Роутер доступний!")
+                bot.send_message(user_id, "Світло є 💡")
             else:
-                bot.send_message(user_id, "Роутер недоступний.")
+                bot.send_message(user_id, "Світла немає 🕯️")
             last_status = current_status
         time.sleep(60)
 
-@bot.message_handler(commands=['start'])
-def handle_start(message):
-    bot.send_message(message.chat.id, "Привіт! Введіть IP-адресу роутера.")
-
-@bot.message_handler(func=lambda message: True)
-def handle_ip_input(message):
-    user_id = message.chat.id
-    router_ip = message.text.strip()
-    user_router[user_id] = router_ip
-    threading.Thread(target=monitor_router, args=(user_id, router_ip)).start()
-
-def main():
-    bot.polling()
+def handler(event, context):
+    try:
+        update = telebot.types.Update.de_json(event["body"])
+        bot.process_new_updates([update])
+        return {
+            "statusCode": 200,
+            "body": "",
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": str(e),
+        }
 
 if __name__ == "__main__":
     main()

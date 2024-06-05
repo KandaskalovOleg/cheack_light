@@ -33,7 +33,7 @@ def monitor_router(user_id, ip_address):
             else:
                 bot.send_message(user_id, "Роутер недоступний.")
             last_status = current_status
-        time.sleep(15)
+        time.sleep(60)
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
